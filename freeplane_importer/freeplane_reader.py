@@ -8,15 +8,9 @@
 
 #from xml.parsers import expat
 
-from xml.etree.ElementTree import ElementTree
 import re
 
 class FreeplaneReader:
-	def __init__(self, xml_path):
-		self.doc = ElementTree()
-		self.doc.parse(xml_path)
-		self.note_nodes = self.doc.findall('.//attribute[@NAME="anki:model"]/..')
-
 	##
 	# Returns an array of notes. Each note is a dict object with the
 	# following keys:
@@ -26,7 +20,10 @@ class FreeplaneReader:
 	# fields	field: value pairs of all fields in the note
 	# id		the id of the node in the mindmap
 	##
-	def parse_notes(self):
+	def parse_notes(self, doc):
+		self.doc = doc
+		self.note_nodes = doc.findall('.//attribute[@NAME="anki:model"]/..')
+
 		notes = []
 		for element in self.note_nodes:
 			deck = self.__get_note_deck(element)
@@ -65,7 +62,8 @@ class FreeplaneReader:
 	# Returns a dict of field : value pairs for the given mindmap node
 	##
 	def __get_note_fields(self, element):
-		fields = self.__get_main_field(element)
+		fields = {}
+		self.__get_main_field(element, fields)
 
 		return fields
 
@@ -85,8 +83,7 @@ class FreeplaneReader:
 	# and defining a custom value. A * character can be escaped with a preceding \,
 	# in which case it is output as-is
 	##
-	def __get_main_field(self, element):
-		field = {}
+	def __get_main_field(self, element, fields):
 		name = self.__get_attribute(element, 'anki:field')
 		if name is not None:
 			field_value = element.get('TEXT')
@@ -96,8 +93,7 @@ class FreeplaneReader:
 			if modifier is not None:
 				field_value = re.sub(r'(?<!\\)\*', field_value, modifier)
 
-			field[name] = field_value
-		return field
+			fields[name] = field_value
 
 
 	def __get_attribute(self, element, name):
@@ -119,10 +115,10 @@ class FreeplaneReader:
 	##
 	#
 	##
-	def __get_child_fields(self, element):
-		fields = {}
+	def __get_child_fields(self, element, fields):
+		for node in element.findall('node'):
+			self.__get_main_field(element, fields)
 
-		element.findall('node')
 
 
 

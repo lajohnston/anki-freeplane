@@ -11,9 +11,9 @@ class Importer:
 			note = self.collection.newNote()
 			field_names = self.collection.models.fieldNames(model)
 
-			# If first field equals id, set it to the node's id
-			if len(field_names) > 0 and field_names[0] == 'id':
-				note['id'] = import_data['id']
+			# If model's first field is 'id', set its value to the node's id
+			if len(field_names) > 0 and field_names[0].lower() == 'id':
+				note[field_names[0]] = import_data['id']
 
 			# Import each field
 			for field in field_names:

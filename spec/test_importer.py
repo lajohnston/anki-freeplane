@@ -24,6 +24,7 @@ class TestImporter(unittest.TestCase):
 
 		self.notes = [
 			{
+				'id': 100,			
 				'deck': 'History',
 				'model': 'Basic',
 				'fields': {}
@@ -63,34 +64,25 @@ class TestImporter(unittest.TestCase):
 		self.mock_collection.models.fieldNames.assert_called_with(self.fake_model)
 
 
-	def test_it_should_save_the_node_id_if_the_first_field_is_named_id(self):
-		self.notes = [
-			{
-				'id': 100,
-				'deck': 'History',
-				'model': 'Basic',
-				'fields': {}
-			}			
-		]
-
+	def test_it_should_save_the_node_id_if_the_first_field_is_named_id_in_lowercase(self):
 		self.mock_collection.models.fieldNames.return_value = ['id']
 		self.importer.import_notes(self.notes)
 
 		self.assertEqual(100, self.fake_note['id'])
 
 
+	def test_it_should_save_the_node_id_if_the_first_field_is_named_id_in_uppercase(self):
+		self.mock_collection.models.fieldNames.return_value = ['ID']
+		self.importer.import_notes(self.notes)
+
+		self.assertEqual(100, self.fake_note['ID'])
+
+
 	def test_it_should_populate_the_note_with_the_field_values(self):
-		self.notes = [
-			{
-				'id': 100,
-				'deck': 'History',
-				'model': 'Basic',
-				'fields': {
-					'Front' : 'Front value',
-					'Back' : 'Back value'
-				}
-			}
-		]
+		self.notes[0]['fields'] = {
+			'Front' : 'Front value',
+			'Back' : 'Back value'
+		}
 
 		self.mock_collection.models.fieldNames.return_value = ['Front', 'Back']
 		self.importer.import_notes(self.notes)
@@ -99,17 +91,10 @@ class TestImporter(unittest.TestCase):
 
 
 	def test_it_should_ignore_fields_that_do_not_exist_in_the_model(self):
-		self.notes = [
-			{
-				'id': 100,
-				'deck': 'History',
-				'model': 'Basic',
-				'fields': {
-					'Front' : 'Front value',
-					'Back' : 'Back value'
-				}
-			}
-		]
+		self.notes[0]['fields'] = {
+			'Front' : 'Front value',
+			'Back' : 'Back value'
+		}
 
 		self.mock_collection.models.fieldNames.return_value = ['Front']
 		self.importer.import_notes(self.notes)

@@ -4,4 +4,4 @@
 
 #import mm_reader
 
-from freeplane_reader import FreeplaneReader
+from importer import Importer

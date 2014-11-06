@@ -4,5 +4,11 @@ sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/../')
 
 
 import unittest
-from test_freeplane_node import TestFreeplaneNode
-suite = unittest.TestLoader().loadTestsFromTestCase(TestFreeplaneNode)
+from test_node import TestNode
+from test_importer import TestImporter
+from test_reader import TestReader
+
+unittest.TestLoader().loadTestsFromTestCase(TestNode)
+unittest.TestLoader().loadTestsFromTestCase(TestReader)
+unittest.TestLoader().loadTestsFromTestCase(TestImporter)
+

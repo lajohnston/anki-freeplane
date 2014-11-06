@@ -1,7 +1,6 @@
 import re
-from collections import OrderedDict
 
-class FreeplaneNode:
+class Node:
 	def __init__(self, doc, element):
 		self.doc = doc
 		self.element = element
@@ -73,7 +72,6 @@ class FreeplaneNode:
 			if modifier is not None:
 				field_value = re.sub(r'(?<!\\)\*', field_value, modifier)
 
-			#print field_value
 			fields[name] = field_value
 		
 		return fields
@@ -97,7 +95,7 @@ class FreeplaneNode:
 			for child_element in self.element.findall('./node'):
 				# If sub-node isn't its own note/model
 				if child_element.find('attribute[@NAME="anki:model"]') is None:
-					children.append(FreeplaneNode(self.doc, child_element))
+					children.append(Node(self.doc, child_element))
 			self.children = children
 
 		return self.children

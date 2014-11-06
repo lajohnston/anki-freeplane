@@ -1,16 +1,4 @@
- 
- # READ : 
- # https://docs.python.org/2/library/xml.etree.elementtree.html#example
-
-
-#import xpath
-#context = xpath.XPathContext()
-
-#from xml.parsers import expat
-
-from freeplane_node import FreeplaneNode
-
-class FreeplaneReader:
+class Reader:
 	##
 	# Returns an array of notes. Each note is a dict object with the
 	# following keys:
@@ -20,18 +8,15 @@ class FreeplaneReader:
 	# fields	field: value pairs of all fields in the note
 	# id		the id of the node in the mindmap
 	##
-	def parse_notes(self, doc):
-		self.doc = doc
+	def get_notes(self, doc):
 		self.note_nodes = doc.findall('.//attribute[@NAME="anki:model"]/..')
 
 		notes = []
 		for element in self.note_nodes:
-			node = FreeplaneNode(doc, element)
+			node = Node(doc, element)
 
 			note = node.to_dict()
-			if note is not None:
+			if note.deck is not None:
 				notes.append(note)
-			
-			print note
 
 		return notes

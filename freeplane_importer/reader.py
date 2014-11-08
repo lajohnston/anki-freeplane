@@ -1,3 +1,5 @@
+from node import Node
+
 class Reader:
 	##
 	# Returns an array of notes. Each note is a dict object with the
@@ -16,7 +18,7 @@ class Reader:
 			node = Node(doc, element)
 
 			note = node.to_dict()
-			if note.deck is not None:
+			if note['deck'] is not None:
 				notes.append(note)
 
 		return notes

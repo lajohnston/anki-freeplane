@@ -28,7 +28,7 @@ class Importer:
 
 	def __set_model(self, model_name):
 		model = self.collection.models.byName(model_name)
-		self.collection.model.setCurrent(model)
+		self.collection.models.setCurrent(model)
 		return model
 
 

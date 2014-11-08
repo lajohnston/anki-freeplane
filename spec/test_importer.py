@@ -51,7 +51,7 @@ class TestImporter(unittest.TestCase):
 		self.mock_collection.models.byName.return_value = fake_model
 
 		self.importer.import_notes(self.notes)
-		self.mock_collection.model.setCurrent.assert_called_with(fake_model)	
+		self.mock_collection.models.setCurrent.assert_called_with(fake_model)	
 
 
 	def test_it_should_create_a_new_note(self):

@@ -50,14 +50,23 @@
 </stylenode>
 </map_styles>
 </hook>
-<hook NAME="AutomaticEdgeColor" COUNTER="1"/>
-<node TEXT="This is the front" POSITION="right" ID="ID_1194397559" CREATED="1415304958826" MODIFIED="1415305724226">
-<edge COLOR="#ff0000"/>
+<hook NAME="AutomaticEdgeColor" COUNTER="3"/>
+<node TEXT="Deck" POSITION="right" ID="ID_793372572" CREATED="1415464979694" MODIFIED="1415464998957">
+<edge COLOR="#00ff00"/>
 <attribute NAME="anki:deck" VALUE="PluginTest"/>
+<node TEXT="This is the front" ID="ID_1194397559" CREATED="1415304958826" MODIFIED="1415464990402">
 <attribute NAME="anki:model" VALUE="FreeplaneTest"/>
 <attribute NAME="anki:field" VALUE="Front"/>
 <node TEXT="This is the back" ID="ID_624938500" CREATED="1415304964333" MODIFIED="1415305728686">
 <attribute NAME="anki:field" VALUE="Back"/>
+</node>
+</node>
+<node TEXT="This is the front of another card" ID="ID_807505283" CREATED="1415304958826" MODIFIED="1415465022376">
+<attribute NAME="anki:model" VALUE="FreeplaneTest"/>
+<attribute NAME="anki:field" VALUE="Front"/>
+<node TEXT="This is the back" ID="ID_365503531" CREATED="1415304964333" MODIFIED="1415305728686">
+<attribute NAME="anki:field" VALUE="Back"/>
+</node>
 </node>
 </node>
 </node>

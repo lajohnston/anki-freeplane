@@ -5,8 +5,7 @@ class Importer:
 
 	def import_notes(self, notes):
 		for import_data in notes:
-			self.__set_deck(import_data['deck'])
-			model = self.__set_model(import_data['model'])
+			model = self.__set_deck_model(import_data['deck'], import_data['model'])
 
 			note = self.collection.newNote()
 			field_names = self.collection.models.fieldNames(model)
@@ -20,38 +19,19 @@ class Importer:
 				if field in import_data['fields']:
 					note[field] = import_data['fields'][field]
 
-
-	def __set_deck(self, deck_name):
-		deck_id = self.collection.decks.id(deck_name)
-		self.collection.decks.select(deck_id)
+			if note.dupeOrEmpty() != 2:
+				self.collection.addNote(note)
 
 
-	def __set_model(self, model_name):
-		model = self.collection.models.byName(model_name)
-		self.collection.models.setCurrent(model)
-		return model
+	def __set_deck_model(self, deck_name, model_name):
+		# select deck
+		did = self.collection.decks.id(deck_name)
+		self.collection.decks.select(did)
+		
+		# set note type for deck
+		m = self.collection.models.byName(model_name)
+		deck = self.collection.decks.get(did)
+		deck['mid'] = m['id']
+		self.collection.decks.save(deck)
 
-
-
-
-	#mw.col.models.fieldNames(model)
-
-
-#Import a text file into the collection
-
-	#from anki.importing import TextImporter
-	#file = u"/path/to/text.txt"
-	# select deck
-	#did = mw.col.decks.id("ImportDeck")
-	#mw.col.decks.select(did)
-	# set note type for deck
-	#m = mw.col.models.byName("Basic")
-	#deck = mw.col.decks.get(did)
-	#deck['mid'] = m['id']
-	#mw.col.decks.save(deck)
-	# import into the collection
-	#ti = TextImporter(mw.col, file)
-	#ti.initMapping()
-	#ti.run()
-
-
+		return m

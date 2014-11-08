@@ -1,4 +1,5 @@
 from node import Node
+import copy
 
 class Reader:
 	##
@@ -16,9 +17,6 @@ class Reader:
 		notes = []
 		for element in self.note_nodes:
 			node = Node(doc, element)
-
-			note = node.to_dict()
-			if note['deck'] is not None:
-				notes.append(note)
+			notes.append(copy.deepcopy(node.to_dict()))
 
 		return notes

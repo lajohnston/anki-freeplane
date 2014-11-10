@@ -5,8 +5,10 @@ from aqt.utils import showInfo
 # import all of the Qt GUI library
 from aqt.qt import *
 
-#from aqt.utils import showInfo
+from aqt.utils import showInfo
 
+
+from freeplane_importer.model_not_found_exception import ModelNotFoundException
 
 import os
 
@@ -29,7 +31,12 @@ def importMindmap():
 
 	# Import notes into Anki
 	importer = Importer(mw.col)
-	importer.import_notes(notes)
+	for note in notes:
+		try:
+			importer.import_note(note)
+		except ModelNotFoundException as e:
+			showInfo('Model ' + e.model_name + ' not found')
+
 	mw.reset()
 
 

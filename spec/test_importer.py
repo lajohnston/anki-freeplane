@@ -12,13 +12,11 @@ class TestImporter(unittest.TestCase):
 	def setUp(self):
 		self.mock_collection = Mock()
 		
-		self.fake_model = {'id': 1}
-		self.mock_collection.models.byName.return_value = self.fake_model
-
-		self.fake_deck = {}
-		self.mock_collection.decks.get.return_value = self.fake_deck
+		self.mock_model = MagicMock()
+		self.mock_collection.models.byName.return_value = self.mock_model
 
 		self.mock_note = MagicMock()
+		self.mock_note.model.return_value = self.mock_model
 		self.mock_collection.newNote.return_value = self.mock_note
 
 		self.mock_collection.models.fieldNames.return_value = []
@@ -33,50 +31,33 @@ class TestImporter(unittest.TestCase):
 		}	
 
 
-	def test_it_should_select_the_deck_for_each_note(self):
-		self.mock_collection.decks.id.return_value = 1000
+	def test_it_should_select_the_correct_deck(self):
+		self.mock_collection.decks.id.return_value = 100
+
+		self.importer = Importer(self.mock_collection)
 
 		self.importer.import_note(self.note)
+		self.mock_model.__setitem__.assert_called_with('did', 100)
 		self.mock_collection.decks.id.assert_called_with('History')
-		self.mock_collection.decks.select.assert_called_with(1000)
 
 
-	def test_it_should_find_the_model_for_each_note(self):
+	def test_it_should_find_the_correct_model(self):
 		self.importer.import_note(self.note)
 		self.mock_collection.models.byName.assert_called_with('Basic')
 
-	#def test_it_should_set_the_correct_model_in_the_collection(self):
-		# Set up fake model with a fake id
-	#	fake_model = {'id': 100}
-	#	self.mock_collection.models.byName.return_value = fake_model
 
-	#	self.importer.import_note(self.note)
-	#	self.mock_collection.models.setCurrent.assert_called_with(fake_model)	
+	def test_it_should_set_the_correct_model(self):
+		self.importer.import_note(self.note)
+		self.mock_collection.models.setCurrent.assert_called_with(self.mock_model);
 
 
-	#def test_it_should_generate_a_new_model_from_the_fields_if_the_model_does_not_exist(self):
-	#	self.mock_collection.models.byName.return_value = None
-	#	new_model = {
-	#		'name': 'Basic',
-	#		'flds': []
-	#	}
-
-	#	self.mock_collection.models.new.return_value = new_model
-
-
-	#	self.importer.import_note(self.note)
-	#	self.mock_collection.models.new.assert_called_with('Basic')
-	#	new_model.
-	
 	def test_it_should_return_true_if_note_was_added_successfully(self):
 		self.assertTrue(self.importer.import_note(self.note))
-
 
 
 	def test_it_should_raise_a_no_model_exception_if_the_model_does_not_exist(self):
 		self.mock_collection.models.byName.return_value = None
 		self.assertRaises(ModelNotFoundException, self.importer.import_note, self.note);
-
 
 
 	def test_it_should_create_a_new_note(self):
@@ -86,7 +67,7 @@ class TestImporter(unittest.TestCase):
 
 	def test_it_should_get_the_field_names_from_the_model(self):
 		self.importer.import_note(self.note)
-		self.mock_collection.models.fieldNames.assert_called_with(self.fake_model)
+		self.mock_collection.models.fieldNames.assert_called_with(self.mock_model)
 
 
 	def test_it_should_save_the_node_id_if_the_first_field_is_named_id_in_lowercase(self):

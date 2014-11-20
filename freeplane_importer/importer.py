@@ -1,5 +1,9 @@
 from model_not_found_exception import ModelNotFoundException
 
+
+from aqt.utils import showInfo
+
+
 class Importer:
 	def __init__(self, collection):
 		self.collection = collection
@@ -11,7 +15,13 @@ class Importer:
 		self.__load_model(import_data['model'])
 
 		# Create note for the relevant model and deck
-		note = self.__find_or_create_note(import_data['id'])
+		is_new = False;
+		note = self.__find_note(import_data['id'])
+		if note is None:
+			is_new = True
+			note = self.collection.newNote()
+
+		# Set note deck
 		note.model()['did'] = self.collection.decks.id(import_data['deck']);
 
 		# If model's first field is 'id', set its value to the node's id
@@ -24,7 +34,9 @@ class Importer:
 			if field in import_data['fields']:
 				note[field] = import_data['fields'][field]
 
-		if note.dupeOrEmpty() != 2:
+		note.flush()
+
+		if is_new:
 			self.collection.addNote(note)
 
 		return True
@@ -49,22 +61,12 @@ class Importer:
 			return None
 
 
-	def __find_or_create_note(self, node_id):
-		note = self.collection.newNote()
-
+	def __find_note(self, node_id):
 		id_field = self.__get_model_id_field()
 		if id_field is not None:		
 			existing_id = self.collection.db.scalar('select id from notes where flds LIKE ? AND mid = ?', str(node_id) +  "\x1f%", self.model['id'])
 			if existing_id is not None:
-				note.id = existing_id
-
-		return note
-
-
-
-	#def __find_card(self, node_id, model_id):
-	#	note_id = this.collection.db.scalar('select id from notes where flds LIKE ? AND mid = ?', node_id +  "\x1f%", model_id)
-	#	if note_id is None:
-	#		return None
-	#	else:
-			
+				#showInfo("ID for node " + node_id + " " + str(existing_id))
+				return self.collection.getNote(existing_id)
+		
+		return None

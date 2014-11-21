@@ -23,19 +23,23 @@ class TestImporter(unittest.TestCase):
 
 		self.importer = Importer(self.mock_collection)
 
+		self.mock_collection.db.scalar.return_value = None
+
 		self.note = {
-			'id': 100,			
+			'id': 100,
 			'deck': 'History',
 			'model': 'Basic',
 			'fields': {}
 		}	
 
+	def test_it_should_initialise_the_correct_model(self):
+		self.importer.import_note(self.note)
+		self.mock_collection.models.setCurrent.assert_called_with(self.mock_model);
+
 
 	def test_it_should_select_the_correct_deck(self):
 		self.mock_collection.decks.id.return_value = 100
-
 		self.importer = Importer(self.mock_collection)
-
 		self.importer.import_note(self.note)
 		self.mock_model.__setitem__.assert_called_with('did', 100)
 		self.mock_collection.decks.id.assert_called_with('History')
@@ -44,11 +48,6 @@ class TestImporter(unittest.TestCase):
 	def test_it_should_find_the_correct_model(self):
 		self.importer.import_note(self.note)
 		self.mock_collection.models.byName.assert_called_with('Basic')
-
-
-	def test_it_should_set_the_correct_model(self):
-		self.importer.import_note(self.note)
-		self.mock_collection.models.setCurrent.assert_called_with(self.mock_model);
 
 
 	def test_it_should_return_true_if_note_was_added_successfully(self):
@@ -105,3 +104,27 @@ class TestImporter(unittest.TestCase):
 		self.mock_collection.models.fieldNames.return_value = ['Front']
 		self.importer.import_note(self.note)
 		self.assertFalse('Back' in self.mock_note)
+
+
+	def test_it_should_save_the_note_changes(self):
+		self.importer.import_note(self.note)
+		self.mock_note.flush.assert_called_with()
+
+
+	def test_it_should_attempt_to_find_an_existing_note_with_the_given_node_id(self):
+		self.mock_collection.getNote.return_value = self.mock_note
+		self.mock_collection.db.scalar.return_value = 123
+		
+		self.importer.import_note(self.note)
+		self.mock_collection.getNote.assert_called_with(123)
+
+
+	def test_it_should_add_the_note_to_the_collection_if_it_is_new(self):
+		del self.mock_note.mod
+		self.importer.import_note(self.note)
+		self.mock_collection.addNote.assert_called_with(self.mock_note)
+
+
+	def test_it_should_not_add_the_note_to_the_collection_if_it_is_not_new(self):
+		self.importer.import_note(self.note)
+		self.assertEqual(0, self.mock_collection.addNote.call_count)

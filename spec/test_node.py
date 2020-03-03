@@ -50,15 +50,15 @@ class TestNode(unittest.TestCase):
         fp_node = Node(self.root, node)
 
         fields = fp_node.get_fields()
-        self.assertTrue(fields.has_key('Name'),
+        self.assertTrue('Name' in fields,
                         "Expected field list to contain a 'Name' key")
-        self.assertEquals(text, fields['Name'])
+        self.assertEqual(text, fields['Name'])
 
     def test_it_should_extract_the_node_text(self):
         text = 'This is the node text'
         node = self.__add_node(self.root, text, {'anki:field': 'Name'})
         fp_node = Node(self.root, node)
-        self.assertEquals(text, fp_node.get_text())
+        self.assertEqual(text, fp_node.get_text())
 
     def test_it_should_extract_fields_from_child_nodes(self):
         parent = self.__add_node(self.root, 'This is the front', {
@@ -68,7 +68,7 @@ class TestNode(unittest.TestCase):
         fp_node = Node(self.root, parent)
         fields = fp_node.get_fields()
 
-        self.assertEquals('This is the back', fields['Back'])
+        self.assertEqual('This is the back', fields['Back'])
 
     def test_it_should_extract_fields_from_nested_child_nodes(self):
         parent = self.__add_node(self.root, 'This is the front', {
@@ -80,7 +80,7 @@ class TestNode(unittest.TestCase):
         fp_node = Node(self.root, parent)
         fields = fp_node.get_fields()
 
-        self.assertEquals('This is the back', fields['Back'])
+        self.assertEqual('This is the back', fields['Back'])
 
     def test_it_should_not_extract_fields_from_sub_notes(self):
         parent = self.__add_node(self.root, 'This is the parent node')
@@ -92,4 +92,4 @@ class TestNode(unittest.TestCase):
         fp_node = Node(self.root, parent)
         fields = fp_node.get_fields()
 
-        self.assertFalse(fields.has_key('SubNote'))
+        self.assertFalse('SubNote' in fields)

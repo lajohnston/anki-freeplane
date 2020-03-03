@@ -1,1 +1,1 @@
-import mindmap
+from . import mindmap

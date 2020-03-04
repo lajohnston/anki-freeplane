@@ -41,12 +41,14 @@ class Node:
     ##
     # Returns a dict of field : value pairs for the given mindmap node
     ##
-
     def get_fields(self, fields={}):
         if self.fields is False:
             fields = self.__parse_main_field(fields)
+            self.__parse_attribute_fields(fields)
+
             for child in self.get_children():
                 fields = child.get_fields(fields)
+
             self.fields = fields
 
         return self.fields
@@ -61,9 +63,9 @@ class Node:
     # and defining a custom value. A * character can be escaped with a preceding \,
     # in which case it is output as-is
     ##
-
     def __parse_main_field(self, fields):
         name = self.get_attribute('anki:field')
+
         if name is not None:
             field_value = self.element.get('TEXT')
 
@@ -75,6 +77,19 @@ class Node:
             fields[name] = field_value
 
         return fields
+
+    ##
+    # Extracts fields defined in 'anki:field:*' attributes and adds them to the dict
+    ##
+    def __parse_attribute_fields(self, fields):
+        attributes = self.element.findall('./attribute')
+        if (not attributes):
+            return
+
+        for attribute in attributes:
+            name = attribute.get('NAME')
+            if (name.startswith('anki:field:')):
+                fields[name[11:]] = attribute.get('VALUE')
 
     def get_attribute(self, name):
         attribute = self.element.find('attribute[@NAME="' + name + '"]')

@@ -58,19 +58,17 @@
 <node TEXT="Deck" POSITION="right" ID="ID_793372572" CREATED="1415464979694" MODIFIED="1583262198781">
 <edge COLOR="#00ff00"/>
 <attribute NAME="anki:deck" VALUE="FreeplaneDeck"/>
-<node TEXT="This is the front" ID="ID_1194397559" CREATED="1415304958826" MODIFIED="1583262144468">
-<attribute NAME="anki:model" VALUE="FreeplaneModel"/>
+<node TEXT="This is the front" ID="ID_1194397559" CREATED="1415304958826" MODIFIED="1583517489597">
+<attribute NAME="anki:model" VALUE="BasicWithID"/>
 <attribute NAME="anki:field" VALUE="Front"/>
 <node TEXT="This is the back" ID="ID_624938500" CREATED="1415304964333" MODIFIED="1415305728686">
 <attribute NAME="anki:field" VALUE="Back"/>
 </node>
 </node>
-<node TEXT="This is the front of another card" ID="ID_807505283" CREATED="1415304958826" MODIFIED="1583262150135">
+<node TEXT="This is the front of another card" ID="ID_807505283" CREATED="1415304958826" MODIFIED="1583518108618">
 <attribute NAME="anki:model" VALUE="FreeplaneModel"/>
 <attribute NAME="anki:field" VALUE="Front"/>
-<node TEXT="This is the back" ID="ID_365503531" CREATED="1415304964333" MODIFIED="1415305728686">
-<attribute NAME="anki:field" VALUE="Back"/>
-</node>
+<attribute NAME="anki:field:Back" VALUE="This is the back"/>
 </node>
 </node>
 </node>

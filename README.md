@@ -35,9 +35,15 @@ In Anki, if you create an 'ID' field as the first field in the model the plugin 
 
 ### anki:field
 
-Identifies a field within the model that the text node will be imported into.
+Identifies the field the text node will be imported into.
 
-### anki:modify
+### anki:field:\*
+
+Example: 'anki:field:Back'
+
+Defines a field value within the attributes. The attribute value will be used as the content.
+
+### anki:modify (optional)
 
 This optional attribute modifies or replaces the text of the field before importing it. Mindmap nodes often have abbreviated text that might not give enough information for a flashcard, so this attribute can be used to replace the text with something else when it gets imported. If the modified value contains an asterisk (\*) character, then the original text will be inserted at this point.
 

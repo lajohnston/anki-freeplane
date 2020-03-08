@@ -79,17 +79,23 @@ class Node:
         return fields
 
     ##
-    # Extracts fields defined in 'anki:field:*' attributes and adds them to the dict
+    # Extracts fields defined in 'anki:field:*' attributes and adds them to the
+    # dict. If the attribute value contains '*' characters then these will be
+    # replaced with the node text
     ##
     def __parse_attribute_fields(self, fields):
         attributes = self.element.findall('./attribute')
         if (not attributes):
             return
 
+        node_text = self.element.get('TEXT')
+
         for attribute in attributes:
             name = attribute.get('NAME')
             if (name.startswith('anki:field:')):
-                fields[name[11:]] = attribute.get('VALUE')
+                field = name[11:]
+                value = attribute.get('VALUE')
+                fields[field] = value.replace('*', node_text)
 
     def get_attribute(self, name):
         attribute = self.element.find('attribute[@NAME="' + name + '"]')

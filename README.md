@@ -41,7 +41,7 @@ Identifies the field the text node will be imported into.
 
 Example: 'anki:field:Back'
 
-Defines a field value within the attributes. The attribute value will be used as the content.
+Defines a field value within the attributes. The attribute value will be used as the content. If the content contains an '\*' character this will be replaced by the text of the mindmap node.
 
 ### anki:modify (optional)
 

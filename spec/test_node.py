@@ -63,6 +63,16 @@ class TestNode(unittest.TestCase):
                         "Expected field list to contain a 'Bar' key")
         self.assertEqual('Baz', fields['Bar'])
 
+    def test_it_should_replace_the_wildcard_character_with_the_node_text(self):
+        node = self.__add_node(
+            self.root, 'Foo', {'anki:field:Foo': 'Bar * Baz'})
+        fp_node = Node(self.root, node)
+
+        fields = fp_node.get_fields()
+        self.assertTrue('Foo' in fields,
+                        "Expected field list to contain a 'Foo' key")
+        self.assertEqual('Bar Foo Baz', fields['Foo'])
+
     def test_it_should_extract_the_node_text(self):
         text = 'This is the node text'
         node = self.__add_node(self.root, text, {'anki:field': 'Name'})

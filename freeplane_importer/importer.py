@@ -56,7 +56,11 @@ class Importer:
 
     def __find_or_create_note(self, node_id):
         existing_id = self.collection.db.scalar(
-            'select id from notes where flds LIKE ? AND mid = ?', str(node_id) + "\x1f%", self.model['id'])
+            'SELECT id FROM notes WHERE flds LIKE ? AND mid = ?',
+            str(node_id) + "\x1f%",
+            self.model['id']
+        )
+
         if existing_id is not None:
             note = self.collection.getNote(existing_id)
             if note is not None:

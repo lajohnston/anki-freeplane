@@ -43,8 +43,7 @@ class Node:
     ##
     def get_fields(self, fields={}):
         if self.fields is False:
-            fields = self.__parse_main_field(fields)
-            self.__parse_attribute_fields(fields)
+            fields = self.__parse_fields(fields)
 
             for child in self.get_children():
                 fields = child.get_fields(fields)
@@ -54,39 +53,14 @@ class Node:
         return self.fields
 
     ##
-    # Returns a dict containing the field_name : value pair for this mindmap node's
-    # 'main' field, that is, the field defined in the anki:field attribute. The field
-    # value is modified by the anki:modify template, which can define a template
-    # containing a '*' character that is replaced by the node's text.
-    #
-    # A template without a '*' character is a way of ignoring the node text completely
-    # and defining a custom value. A * character can be escaped with a preceding \,
-    # in which case it is output as-is
-    ##
-    def __parse_main_field(self, fields):
-        name = self.get_attribute('anki:field')
-
-        if name is not None:
-            field_value = self.element.get('TEXT')
-
-            # Apply modification defined in anki:modify field
-            modifier = self.get_attribute('anki:modify')
-            if modifier is not None:
-                field_value = re.sub(r'(?<!\\)\*', field_value, modifier)
-
-            fields[name] = field_value
-
-        return fields
-
-    ##
     # Extracts fields defined in 'anki:field:*' attributes and adds them to the
     # dict. If the attribute value contains '*' characters then these will be
     # replaced with the node text
     ##
-    def __parse_attribute_fields(self, fields):
+    def __parse_fields(self, fields):
         attributes = self.element.findall('./attribute')
         if (not attributes):
-            return
+            return fields
 
         node_text = self.element.get('TEXT')
 
@@ -96,6 +70,8 @@ class Node:
                 field = name[11:]
                 value = attribute.get('VALUE')
                 fields[field] = value.replace('*', node_text)
+
+        return fields
 
     def get_attribute(self, name):
         attribute = self.element.find('attribute[@NAME="' + name + '"]')

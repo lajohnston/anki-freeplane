@@ -33,19 +33,11 @@ Identifies that the node can be converted to an Anki note. The value indicates w
 
 In Anki, if you create an 'ID' field as the first field in the model the plugin will automatically insert the node id into this and will use this when syncing future imports. Changing the text of the node in Freeplane and reimporting into Anki will therefore update the existing note rather than creating a whole new one.
 
-### anki:field
-
-Identifies the field the text node will be imported into.
-
 ### anki:field:\*
 
 Example: 'anki:field:Back'
 
 Defines a field value within the attributes. The attribute value will be used as the content. If the content contains an '\*' character this will be replaced by the text of the mindmap node.
-
-### anki:modify (optional)
-
-This optional attribute modifies or replaces the text of the field before importing it. Mindmap nodes often have abbreviated text that might not give enough information for a flashcard, so this attribute can be used to replace the text with something else when it gets imported. If the modified value contains an asterisk (\*) character, then the original text will be inserted at this point.
 
 ## Development
 
